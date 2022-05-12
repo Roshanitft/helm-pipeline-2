@@ -55,10 +55,9 @@ jobs:
         run: aws secretsmanager get-secret-value --secret-id simple_bank --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
 
       - name: Build, tag, and push image to Amazon ECR
-        env:
-         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-         ECR_REPOSITORY: helm-repo
-         IMAGE_TAG: $ {{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG    
+          
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 692851696394.dkr.ecr.us-east-1.amazonaws.com
+          docker build -t helm-repo .
+          docker tag helm-repo:latest 692851696394.dkr.ecr.us-east-1.amazonaws.com/helm-repo:latest
+          docker push 692851696394.dkr.ecr.us-east-1.amazonaws.com/helm-repo:latest
