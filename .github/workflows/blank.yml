@@ -60,5 +60,5 @@ jobs:
           
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 692851696394.dkr.ecr.us-east-1.amazonaws.com
           docker build -t helm-repo .
-          docker tag "Tags: ${{ github.event.inputs.tags }}"  692851696394.dkr.ecr.us-east-1.amazonaws.com/"Tags: ${{ github.event.inputs.tags }}" 
-          docker push 692851696394.dkr.ecr.us-east-1.amazonaws.com/"Tags: ${{ github.event.inputs.tags }}" 
+          docker tag "Tags: ${{ github.event.inputs.tags }}"  692851696394.dkr.ecr.us-east-1.amazonaws.com/helm-repo:"Tags: ${{ github.event.inputs.tags }}" 
+          docker push 692851696394.dkr.ecr.us-east-1.amazonaws.com/helm-repo:"Tags: ${{ github.event.inputs.tags }}" 
