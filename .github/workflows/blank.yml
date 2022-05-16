@@ -47,18 +47,17 @@ jobs:
         uses: moia-oss/setup-eksctl@v1
         with:
     # Version of eksctl
-          version: 0.1.0 # default is latest
+          version: 0.1.2 # default is latest
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Load secrets and save to app.env
-        run: aws secretsmanager get-secret-value --secret-id simple_bank --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
+      
 
       - name: Build, tag, and push image to Amazon ECR
         run: |
           
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 692851696394.dkr.ecr.us-east-1.amazonaws.com
           docker build -t automation .
-          docker tag automation:helm 692851696394.dkr.ecr.us-east-1.amazonaws.com/automation:helm 
-          docker push 692851696394.dkr.ecr.us-east-1.amazonaws.com/automation:helm 
+          docker tag automation:"Tags: ${{ github.event.inputs.tags }}" 692851696394.dkr.ecr.us-east-1.amazonaws.com/automation:"Tags: ${{ github.event.inputs.tags }}" 
+          docker push 692851696394.dkr.ecr.us-east-1.amazonaws.com/automation:"Tags: ${{ github.event.inputs.tags }}" 
